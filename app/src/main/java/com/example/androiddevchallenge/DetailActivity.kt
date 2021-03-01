@@ -15,42 +15,38 @@
  */
 package com.example.androiddevchallenge
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import com.example.androiddevchallenge.model.Puppy
-import com.example.androiddevchallenge.ui.screen.MainScreen
+import com.example.androiddevchallenge.ui.screen.DetailScreen
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
-class MainActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity() {
+
+    companion object {
+        private const val KEY_PARAM_PUPPY = "com.example.androiddevchallenge.DetailActivity.PUPPY"
+
+        fun navigateToDetail(context: Context, puppy: Puppy) {
+            Intent(context, DetailActivity::class.java).run {
+                putExtra(KEY_PARAM_PUPPY, puppy)
+                context.startActivity(this)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Puppy.puppyList
         setContent {
             MyTheme {
-                MainScreen(
-                    puppyList = Puppy.puppyList,
-                    onClick = {
-                        DetailActivity.navigateToDetail(this, it)
-                    }
-                )
+                DetailScreen(
+                    intent.getParcelableExtra<Puppy>(KEY_PARAM_PUPPY)!!,
+                    onBackPress = { onBackPressed() }
+                ) {
+                }
             }
         }
     }
 }
-//
-// @Preview("Light Theme", widthDp = 360, heightDp = 640)
-// @Composable
-// fun LightPreview() {
-//    MyTheme {
-//        MyApp(listOf())
-//    }
-// }
-//
-// @Preview("Dark Theme", widthDp = 360, heightDp = 640)
-// @Composable
-// fun DarkPreview() {
-//    MyTheme(darkTheme = true) {
-//        MyApp(Puppy.dogList)
-//    }
-// }
