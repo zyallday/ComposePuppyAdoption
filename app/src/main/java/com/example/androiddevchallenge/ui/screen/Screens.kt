@@ -170,7 +170,7 @@ fun DetailScreen(puppy: Puppy, onBackPress: () -> Unit = { }, onAdoptionClick: (
 @Composable
 fun AdoptionPage(puppy: Puppy, onAdoptionClick: () -> Unit) {
     val openDialog = remember { mutableStateOf(false) }
-    val congratulation = remember{ mutableStateOf(false) }
+    val congratulation = remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxSize()) {
 
         Surface(
@@ -193,9 +193,12 @@ fun AdoptionPage(puppy: Puppy, onAdoptionClick: () -> Unit) {
         LabelItem(labelDesc = "Age", labelContent = puppy.age)
         LabelItem(labelDesc = "Location", labelContent = puppy.location)
         Spacer(modifier = Modifier.requiredHeight(20.dp))
-        Button(onClick = {
-            openDialog.value = true
-        }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+        Button(
+            onClick = {
+                openDialog.value = true
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
             Text("Adoption")
         }
 
@@ -206,7 +209,6 @@ fun AdoptionPage(puppy: Puppy, onAdoptionClick: () -> Unit) {
         if (congratulation.value) {
             showCongratulationDialog(openDialog, congratulation)
         }
-
     }
 }
 
@@ -230,7 +232,8 @@ private fun showCongratulationDialog(
 
                 onClick = {
                     congratulation.value = false
-                }) {
+                }
+            ) {
                 Text("OK")
             }
         }
@@ -261,7 +264,8 @@ private fun showAdoptionDialog(
                 onClick = {
                     openDialog.value = false
                     congratulation.value = true
-                }) {
+                }
+            ) {
                 Text("Yes")
             }
         },
@@ -270,7 +274,8 @@ private fun showAdoptionDialog(
 
                 onClick = {
                     openDialog.value = false
-                }) {
+                }
+            ) {
                 Text("No")
             }
         }
