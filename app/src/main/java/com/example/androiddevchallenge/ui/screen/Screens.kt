@@ -33,6 +33,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
@@ -49,6 +50,9 @@ import androidx.compose.material.icons.outlined.Female
 import androidx.compose.material.icons.outlined.Male
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -165,7 +169,10 @@ fun DetailScreen(puppy: Puppy, onBackPress: () -> Unit = { }, onAdoptionClick: (
 
 @Composable
 fun AdoptionPage(puppy: Puppy, onAdoptionClick: () -> Unit) {
+    val openDialog = remember { mutableStateOf(false) }
+    val congratulation = remember{ mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxSize()) {
+
         Surface(
             modifier = Modifier
                 .requiredSize(200.dp)
@@ -186,10 +193,88 @@ fun AdoptionPage(puppy: Puppy, onAdoptionClick: () -> Unit) {
         LabelItem(labelDesc = "Age", labelContent = puppy.age)
         LabelItem(labelDesc = "Location", labelContent = puppy.location)
         Spacer(modifier = Modifier.requiredHeight(20.dp))
-        Button(onClick = onAdoptionClick, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+        Button(onClick = {
+            openDialog.value = true
+        }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text("Adoption")
         }
+
+        if (openDialog.value) {
+            showAdoptionDialog(openDialog, congratulation)
+        }
+
+        if (congratulation.value) {
+            showCongratulationDialog(openDialog, congratulation)
+        }
+
     }
+}
+
+@Composable
+private fun showCongratulationDialog(
+    openDialog: MutableState<Boolean>,
+    congratulation: MutableState<Boolean>
+) {
+    AlertDialog(
+        onDismissRequest = {
+            // Dismiss the dialog when the user clicks outside the dialog or on the back
+            // button. If you want to disable that functionality, simply use an empty
+            // onCloseRequest.
+            openDialog.value = false
+        },
+        text = {
+            Text("Congratulations! You have adopt it.")
+        },
+        confirmButton = {
+            Button(
+
+                onClick = {
+                    congratulation.value = false
+                }) {
+                Text("OK")
+            }
+        }
+    )
+}
+
+@Composable
+private fun showAdoptionDialog(
+    openDialog: MutableState<Boolean>,
+    congratulation: MutableState<Boolean>
+) {
+    AlertDialog(
+        onDismissRequest = {
+            // Dismiss the dialog when the user clicks outside the dialog or on the back
+            // button. If you want to disable that functionality, simply use an empty
+            // onCloseRequest.
+            openDialog.value = false
+        },
+        title = {
+            Text(text = "Adoption")
+        },
+        text = {
+            Text("Do you want to adopt it?")
+        },
+        confirmButton = {
+            Button(
+
+                onClick = {
+                    openDialog.value = false
+                    congratulation.value = true
+                }) {
+                Text("Yes")
+            }
+        },
+        dismissButton = {
+            Button(
+
+                onClick = {
+                    openDialog.value = false
+                }) {
+                Text("No")
+            }
+        }
+    )
 }
 
 @Composable
